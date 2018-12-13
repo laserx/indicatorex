@@ -5,7 +5,7 @@ defmodule Indicatorex.EMA do
   @spec calc([number()], number()) :: {:error, :empty} | {:ok, Indicatorex.EMA.t()}
   def calc(data, span), do: run(data, span)
 
-  @spec calc(number(), number(), number()) :: float()
+  @spec calc(any(), any(), any()) :: float() | {:error, String.t()}
   def calc(close, pre, span) when span >= 1, do: (2 * close + (span - 1) * pre) / (span + 1)
   def calc(_, _, span), do: {:error, "span value: #{span}. span must above 1"}
 
