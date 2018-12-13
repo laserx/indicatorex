@@ -2,7 +2,7 @@ defmodule Indicatorex.EMA do
   @type t :: %Indicatorex.EMA{span: integer, v: [float]}
   defstruct span: 0, v: []
 
-  @spec calc([number()], any()) :: {:error, :empty} | {:ok, Indicatorex.EMA.t()}
+  @spec calc([number()], number()) :: {:error, :empty} | {:ok, Indicatorex.EMA.t()}
   def calc(data, span), do: run(data, span)
 
   @spec calc(number(), number(), number()) :: float()
