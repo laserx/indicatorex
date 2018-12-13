@@ -1,0 +1,2 @@
+defmodule Indicatorex do
+end
