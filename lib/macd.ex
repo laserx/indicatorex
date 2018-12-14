@@ -1,19 +1,22 @@
 defmodule Indicatorex.MACD do
-  defstruct v: [%Indicatorex.MACD.Sericalize{}]
+  defstruct fast: 0, slow: 0, dif: 0, v: [%Indicatorex.MACD.Sericalize{}]
 
   def calc(data, fast \\ 12, slow \\ 26, diff \\ 9), do: run(data, fast, slow, diff)
 
   defp run(_, fast, slow, _) when slow <= fast and is_integer(slow + fast),
-    do: {:error, "fast and slow error"}
+    do: {:error, "fast must less than slow"}
 
   defp run(data, fast, slow, diff) when is_integer(fast + slow + diff) do
     alias Indicatorex.EMA
     {:ok, %EMA{span: ^fast, v: ema_f}} = EMA.calc(data, fast)
     {:ok, %EMA{span: ^slow, v: ema_s}} = EMA.calc(data, slow)
-    {:ok, diff_fs} = differ(ema_f, ema_s)
-    {:ok, %EMA{span: ^diff, v: ema_d}} = EMA.calc(diff_fs, diff)
+    {:ok, dif_fs} = differ(ema_f, ema_s)
+    {:ok, %EMA{span: ^diff, v: ema_d}} = EMA.calc(dif_fs, diff)
 
-    macd(ema_f, ema_s, ema_d)
+    case macd(ema_f, ema_s, ema_d) do
+      {:ok, v} -> %Indicatorex.MACD{fast: fast, slow: slow, dif: diff, v: v}
+      error -> error
+    end
   end
 
   defp macd(ema_f, ema_s, ema_d, resp \\ [])
@@ -33,7 +36,7 @@ defmodule Indicatorex.MACD do
             ema_f: fh,
             ema_s: sh,
             dea: dh,
-            diff: fh - sh,
+            dif: fh - sh,
             macd: 2 * (fh - sh - dh)
           }
         ]
