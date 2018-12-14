@@ -1,6 +1,17 @@
 defmodule Indicatorex.MACD do
+  @type t :: %Indicatorex.MACD{
+          fast: number(),
+          slow: number(),
+          dif: number(),
+          v: [Indicatorex.MACD.Sericalize.t()]
+        }
   defstruct fast: 0, slow: 0, dif: 0, v: [%Indicatorex.MACD.Sericalize{}]
 
+  @doc """
+  MACD calc function
+  """
+  @spec calc([number()], number(), number(), number()) ::
+          {:error, String.t()} | {:ok, Indicatorex.MACD.t()}
   def calc(data, fast \\ 12, slow \\ 26, diff \\ 9), do: run(data, fast, slow, diff)
 
   defp run(_, fast, slow, _) when slow <= fast and is_integer(slow + fast),
@@ -14,7 +25,7 @@ defmodule Indicatorex.MACD do
     {:ok, %EMA{span: ^diff, v: ema_d}} = EMA.calc(dif_fs, diff)
 
     case macd(ema_f, ema_s, ema_d) do
-      {:ok, v} -> %Indicatorex.MACD{fast: fast, slow: slow, dif: diff, v: v}
+      {:ok, v} -> {:ok, %Indicatorex.MACD{fast: fast, slow: slow, dif: diff, v: v}}
       error -> error
     end
   end
@@ -45,6 +56,9 @@ defmodule Indicatorex.MACD do
     )
   end
 
+  @doc """
+  ema_f and ema_s differ list generate
+  """
   @spec differ([number()], [number()]) :: {:error, String.t()} | {:ok, [number()]}
   def differ(f, s), do: diff(f, s)
 
