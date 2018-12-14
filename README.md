@@ -1,6 +1,6 @@
 # Indicatorex
 
-**TODO: Add description**
+Indicator
 
 ## Installation
 
