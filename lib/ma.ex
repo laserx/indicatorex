@@ -27,7 +27,7 @@ defmodule Indicatorex.MA do
   defp window([], _), do: 0
 
   defp window(data, n) do
-    case length(Enum.take(data, -n)) < n - 1 do
+    case length(Enum.take(data, n)) < n - 1 do
       true -> length(Enum.take(data, -n)) + 1
       _ -> n
     end
