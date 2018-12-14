@@ -26,6 +26,8 @@ defmodule Indicatorex.MACD do
   defp macd([fh | ft], [sh | st], [dh | dt], resp) do
     alias Indicatorex.MACD.Sericalize
 
+    dif = fh - sh
+
     macd(
       ft,
       st,
@@ -36,8 +38,8 @@ defmodule Indicatorex.MACD do
             ema_f: fh,
             ema_s: sh,
             dea: dh,
-            dif: fh - sh,
-            macd: 2 * (fh - sh - dh)
+            dif: dif,
+            macd: 2 * (dif - dh)
           }
         ]
     )
